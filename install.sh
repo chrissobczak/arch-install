@@ -34,21 +34,16 @@ diskpasswd=$(collect_password "Enter the password for disk encryption: ")
 # https://stackoverflow.com/questions/12150116/how-to-script-sfdisk-or-parted-for-multiple-partitions
 sfdisk $disk < layout.sfdisk
 
-mkfs.fat -F32 "$bootpartition"
-mkfs.swap "$swappartition"
-cryptsetup luksFormat "$encryptedpartition"
-cryptsetup open "$encryptedpartition" unencryptedpartition
+mkfs.fat -F32 "${disk}1"
+mkfs.swap "${disk}2"
+cryptsetup luksFormat "${disk}3"
+cryptsetup open "${disk}3" unencryptedpartition
+mkfs.ext4 /dev/mapper/unencryptedpartition
 
 mount /dev/mapper/unencryptedpartition /mnt
 mkdir /mnt/boot
-mount "$bootpartition" /mnt/boot
-swapon "$swappartition"
-
-
-
-
-
-
+mount "${disk}1" /mnt/boot
+swapon "${disk}2"
 
 
 
