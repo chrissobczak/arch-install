@@ -18,19 +18,47 @@ printf "Name the disk on which to install arch (ex /dev/sda): " >&2
 read -r disk
 printf '%s\n' "$disk"
 
+printf "UEFI or Legacy BIOS?: " >&2
+read -r bootmode
+printf '%s\n' "$bootmode"
+
+printf "Hostname: " >&2
+read -r hostname
+printf '%s\n' "$hostname"
+
 diskpasswd=$(collect_password "Enter the password for disk encryption: ")
-
-
-
 
 # sfdisk ... or parted?
 # should ask for all required user input from the beginning then run all the things
 
 #sfdisk $disk
 
-#mkfs.fat -F32 "$disk1"
-#mkfs.swap "$disk2"
+mkfs.fat -F32 "$bootpartition"
+mkfs.swap "$swappartition"
+cryptsetup luksFormat "$encryptedpartition"
+cryptsetup open "$encryptedpartition" unencryptedpartition
 
-#cryptsetup luksFormat "$disk3"
+mount /dev/mapper/unencryptedpartition /mnt
+mkdir /mnt/boot
+mount "$bootpartition" /mnt/boot
+swapon "$swappartition"
 
-#cryptsetup open
+# investigate further how to use syslinux with
+# with the encrypted drive - probably just
+# same kind of operation as with grub
+if [ $bootmode == "UEFI" ]; then
+	efibootmgr syslinux ...
+fi
+pacstrap -K /mnt base linux linux-firmware neovim
+
+genfstab -U /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt bash
+ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+hwclock --systohc
+
+printf 'LANG=en_US.UTF-8' > /etc/locale.conf
+locale-gen
+printf '%s' "$hostname" > /etc/hostname
+
+
