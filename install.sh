@@ -1,5 +1,8 @@
 #!/bin/sh
 
+
+# should ask for all required user input from the beginning then run all the things
+
 collect_password() {
 	printf $1 >&2
 	read -s password
@@ -26,19 +29,10 @@ printf "Hostname: " >&2
 read -r hostname
 printf '%s\n' "$hostname"
 
-
-
-
-
-
-
 diskpasswd=$(collect_password "Enter the password for disk encryption: ")
 
-# sfdisk ... or parted?
-# should ask for all required user input from the beginning then run all the things
-
 # https://stackoverflow.com/questions/12150116/how-to-script-sfdisk-or-parted-for-multiple-partitions
-sfdisk $disk
+sfdisk $disk < layout.sfdisk
 
 mkfs.fat -F32 "$bootpartition"
 mkfs.swap "$swappartition"
