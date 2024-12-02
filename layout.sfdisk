@@ -1,6 +1,10 @@
 label: gpt
 unit: sectors
 
-start=	, size=	, type=4, bootable
-start=	, size=	, type=19
-start=	, size=	*, type=20
+#start=	, size=	, type=4, bootable
+#start=	, size=	, type=19
+#start=	, size=	*, type=20
+
+size=	1073741824,	type=4,	bootable
+size=	8589934592,	type=19
+size=	*,		type=20
