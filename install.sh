@@ -26,12 +26,19 @@ printf "Hostname: " >&2
 read -r hostname
 printf '%s\n' "$hostname"
 
+
+
+
+
+
+
 diskpasswd=$(collect_password "Enter the password for disk encryption: ")
 
 # sfdisk ... or parted?
 # should ask for all required user input from the beginning then run all the things
 
-#sfdisk $disk
+# https://stackoverflow.com/questions/12150116/how-to-script-sfdisk-or-parted-for-multiple-partitions
+sfdisk $disk
 
 mkfs.fat -F32 "$bootpartition"
 mkfs.swap "$swappartition"
@@ -43,13 +50,21 @@ mkdir /mnt/boot
 mount "$bootpartition" /mnt/boot
 swapon "$swappartition"
 
+
+
+
+
+
+
+
+
 # investigate further how to use syslinux with
 # with the encrypted drive - probably just
 # same kind of operation as with grub
 if [ $bootmode == "UEFI" ]; then
 	efibootmgr syslinux ...
 fi
-pacstrap -K /mnt base linux linux-firmware neovim
+pacstrap -K /mnt base linux linux-firmware neovim lvm2
 
 genfstab -U /mnt >> /mnt/etc/fstab
 

@@ -1,0 +1,6 @@
+label: gpt
+unit: sectors
+
+start=	, size=	, type=4, bootable
+start=	, size=	, type=19
+start=	, size=	, type=20
