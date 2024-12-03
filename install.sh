@@ -46,14 +46,14 @@ printf '127.0.0.1 localhost' > /etc/hosts
 printf '::1 localhost' >> /etc/hosts
 printf "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
 
-printf '%s\n' "Enter a password for the root user:"
+printf '%s\n' "Enter a password for the root user: "
 passwd
 useradd -G wheel -m $USERNAME
-printf '%s\n' "Enter a password for $USERNAME:"
+printf '%s\n' "Enter a password for $USERNAME: "
 passwd $USERNAME
 
 sed -i 's|^HOOKS=(|HOOKS=(lvm2 encrypt |g' /etc/mkinitcpio.conf
-sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT.*$|GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel3 quiet cryptdevice=UUID=$(lsblk -o UUID "${DISK}3" | tail -n 1):cryptlvm root=UUID=$(lsblk -o UUID /dev/mapper/unencryptedpartition | tail -n 1) iomem=relaxed\"|g"
+sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT.*$|GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel3 quiet cryptdevice=UUID=$(lsblk -o UUID "${DISK}3" | tail -n 1):cryptlvm root=UUID=$(lsblk -o UUID /dev/mapper/unencryptedpartition | tail -n 1) iomem=relaxed\"|g" /etc/default/grub
 case $BOOTMODE in
 	UEFI) grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub;;
 	BIOS) grub-install $DISK;;
