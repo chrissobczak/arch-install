@@ -14,7 +14,11 @@ read -r USERNAME
 sfdisk $disk < layout.sfdisk
 mkfs.fat -F32 "${DISK}1"
 mkfs.swap "${DISK}2"
-cryptsetup luksFormat "${DISK}3"
+
+# Need to figure out how to use keyfile / usb
+cryptsetup luksFormat --type luks2 --hash sha512 --iter-time 5000 --key-size 512 --key-file /dev/sdZ "${DISK}3"
+# can we use UUID in the line above for --key-file
+
 cryptsetup open "${DISK}3" unencryptedpartition
 mkfs.ext4 /dev/mapper/unencryptedpartition
 
