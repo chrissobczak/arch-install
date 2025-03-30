@@ -66,9 +66,9 @@ passwd $USERNAME
 sed -i 's|^HOOKS=(|HOOKS=(lvm2 encrypt |g' /etc/mkinitcpio.conf
 sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT.*$|GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel3 quiet cryptdevice=UUID=$(lsblk -o UUID "${DISK}3" | tail -n 1):cryptlvm root=UUID=$(lsblk -o UUID /dev/mapper/unencryptedpartition | tail -n 1) iomem=relaxed\"|g" /etc/default/grub
 case $BOOTMODE in
-	UEFI) grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub;;
-	BIOS) grub-install $DISK;;
-	*) "No valid bootmode provided";;
+	UEFI) grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub ;;
+	BIOS) grub-install $DISK ;;
+	*) "No valid bootmode provided" ;;
 esac
 grub-mkconfig -o /boot/grub/grub.cfg
 
