@@ -8,6 +8,8 @@ printf "Hostname: " >&2
 read -r HOSTNAME
 printf "Username: " >&2
 read -r USERNAME
+printf "Keydisk (ex /dev/sdZ): " >&2
+read -r KEYDISK
 
 # Format disk
 # https://stackoverflow.com/questions/12150116/how-to-script-sfdisk-or-parted-for-multiple-partitions
@@ -16,8 +18,13 @@ mkfs.fat -F32 "${DISK}1"
 mkfs.swap "${DISK}2"
 
 # Need to figure out how to use keyfile / usb
-cryptsetup luksFormat --type luks2 --hash sha512 --iter-time 5000 --key-size 512 --key-file /dev/sdZ "${DISK}3"
-# can we use UUID in the line above for --key-file
+cryptsetup luksFormat \
+	--type luks2 \
+	--hash sha512 \
+	--iter-time 5000 \
+	--key-size 512 \
+	--key-file "${KEYDISK}" \
+	"${DISK}3"
 
 cryptsetup open "${DISK}3" unencryptedpartition
 mkfs.ext4 /dev/mapper/unencryptedpartition
