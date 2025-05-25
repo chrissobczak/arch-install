@@ -11,8 +11,6 @@ read -r USERNAME
 printf "Keydisk (ex /dev/sdZ): " >&2
 read -r KEYDISK
 
-# Format disk
-# https://stackoverflow.com/questions/12150116/how-to-script-sfdisk-or-parted-for-multiple-partitions
 sfdisk $disk < layout.sfdisk
 mkfs.fat -F32 "${DISK}1"
 mkfs.swap "${DISK}2"

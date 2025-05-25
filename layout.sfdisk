@@ -5,6 +5,6 @@ unit: sectors
 #start=	, size=	, type=19
 #start=	, size=	*, type=20
 
-size=	1073741824,	type=4,	bootable
-size=	8589934592,	type=19
-size=	*,		type=20
+start= ,	size=	1073741824,	bootable,	type=4
+start= ,	size=	8589934592,			type=19
+start= ,	size=	*,				type=20
