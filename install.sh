@@ -39,7 +39,8 @@ case $BOOTMODE in
 	*) "No valid bootmode provided";;
 esac
 
-pacstrap -K /mnt base linux linux-firmware lvm2 cryptsetup grub $additionalpackages
+# Or syslinux ...
+pacstrap -K /mnt base linux linux-firmware lvm2 cryptsetup grub neovim git curl $additionalpackages
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # Chroot into the new machine
